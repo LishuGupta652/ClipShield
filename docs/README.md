@@ -2,6 +2,10 @@
 
 MacTools is a customizable macOS menu bar toolkit. This documentation covers setup, configuration, packaging, and distribution.
 
+## Menu Preview
+
+![MacTools menu preview](Menu_Preview.png)
+
 ## What You Get
 
 - Menu bar status items (time, battery, Wi-Fi, clipboard)
