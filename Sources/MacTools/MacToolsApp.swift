@@ -31,7 +31,6 @@ final class ActionPayload: NSObject {
     }
 }
 
-@main
 final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDelegate {
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
@@ -469,5 +468,15 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
             debugWindow?.close()
             debugWindow = nil
         }
+    }
+}
+
+@main
+struct MacToolsMain {
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = MacToolsApp()
+        app.delegate = delegate
+        app.run()
     }
 }
