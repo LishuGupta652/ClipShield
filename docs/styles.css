@@ -13,8 +13,23 @@
   --selection-color: rgba(15, 118, 110, 0.2);
 }
 
+html,
 body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.app,
+.main {
+  min-height: 100vh;
 }
 
 .app-name-link img {
@@ -24,6 +39,8 @@ body {
 
 .markdown-section {
   max-width: 980px;
+  min-height: 60vh;
+  padding-bottom: 4rem;
 }
 
 .markdown-section code {
@@ -40,8 +57,53 @@ body {
   border-right: 1px solid #e2e8f0;
 }
 
+.sidebar-nav > ul > li > p {
+  margin: 1.2rem 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.sidebar-nav > ul > li > p::after {
+  content: \"\";
+  display: block;
+  height: 1px;
+  background: #e2e8f0;
+  margin-top: 0.5rem;
+}
+
+.sidebar-nav ul ul {
+  margin: 0.4rem 0 0.9rem 0.6rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid #e2e8f0;
+}
+
+.sidebar-nav ul ul li a {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.sidebar-nav ul ul li a:hover {
+  color: #0f766e;
+}
+
 .sidebar ul li.active > a {
   font-weight: 600;
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.08);
+  border-radius: 8px;
+}
+
+.sidebar ul li.active > a::before {
+  content: \"\";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: #0f766e;
 }
 
 .cover-main {
@@ -63,6 +125,15 @@ section.cover {
 
 .docsify-pagination-container {
   border-top: 1px solid #e2e8f0;
+}
+
+.main {
+  background: transparent;
+}
+
+.content {
+  min-height: 100vh;
+  background: transparent;
 }
 
 @media (max-width: 640px) {
