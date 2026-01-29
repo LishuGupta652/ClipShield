@@ -200,6 +200,17 @@ You can choose either:
 
 Tip: menu bar icons look best as template (monochrome) PNGs.
 
+Example for a custom file:
+
+```json
+{
+  "menuBarIcon": {
+    "iconPath": "MenuBarIcon.png",
+    "accessibilityLabel": "MacTools"
+  }
+}
+```
+
 ### App Icon (Dock / Finder)
 
 If you want a custom app icon for the `.app` bundle, add:
