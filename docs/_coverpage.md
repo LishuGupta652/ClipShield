@@ -9,4 +9,4 @@
 - Easy packaging, cask distribution, and docs
 
 [Get Started](getting-started.md)
-[GitHub](#)
+[GitHub](https://github.com/LishuGupta652/macos-toolkit)

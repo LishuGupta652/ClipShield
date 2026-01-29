@@ -8,8 +8,9 @@ The docs site is static. Any static host works.
 2. Go to **Settings -> Pages**
 3. Set **Branch** to `main` and **Folder** to `/docs`
 4. Save and wait for the site to build
+5. Add your custom domain: `macos-toolkit.lishugupta.in`
 
-Note: This repo includes `docs/.nojekyll` so files like `_sidebar.md` are served correctly.
+Note: This repo includes `docs/.nojekyll` so files like `_sidebar.md` are served correctly. The `docs/CNAME` file is already set to your domain.
 
 ## Netlify
 

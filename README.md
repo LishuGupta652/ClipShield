@@ -106,6 +106,8 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080`.
 
+Docs site: `https://macos-toolkit.lishugupta.in`
+
 If you prefer Docsify's dev server:
 
 ```bash
