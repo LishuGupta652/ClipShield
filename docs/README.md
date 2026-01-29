@@ -4,7 +4,9 @@ MacTools is a customizable macOS menu bar toolkit. This documentation covers set
 
 ## Menu Preview
 
-![MacTools menu preview](Menu_Preview.png)
+<p align="center">
+  <img src="Menu_Preview.png" alt="MacTools menu preview" width="320" />
+</p>
 
 ## What You Get
 
