@@ -1,4 +1,6 @@
-![MacTools](docs/assets/logo.svg)
+<p align="center">
+  <img src="docs/assets/logo.svg" alt="MacTools" width="96" />
+</p>
 
 # MacTools (Menu Bar Boilerplate)
 
@@ -15,7 +17,9 @@ MacTools is a complete, minimal macOS menu bar app scaffold you can customize in
 
 ## Menu Preview
 
-![MacTools menu preview](docs/Menu_Preview.png)
+<p align="center">
+  <img src="docs/Menu_Preview.png" alt="MacTools menu preview" width="320" />
+</p>
 
 ---
 
