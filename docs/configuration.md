@@ -22,6 +22,7 @@ Sources/MacTools/Resources/DefaultConfig.json
 - `statusSection` (object)
 - `sections` (array)
 - `footer` (object)
+- `debug` (object)
 
 ## Example
 
@@ -57,6 +58,9 @@ Sources/MacTools/Resources/DefaultConfig.json
     "showRevealConfig": true,
     "showRelaunch": true,
     "showQuit": true
+  },
+  "debug": {
+    "showWindow": false
   }
 }
 ```
@@ -85,4 +89,18 @@ Example:
 
 ```json
 "timeFormat": "HH:mm"
+```
+
+## Debug Window
+
+To show a debug window on launch:
+
+```json
+"debug": { "showWindow": true }
+```
+
+You can also force it on via environment variable:
+
+```bash
+MACTOOLS_DEBUG=1 swift run
 ```

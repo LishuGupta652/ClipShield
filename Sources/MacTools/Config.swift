@@ -7,6 +7,7 @@ struct Config: Codable {
     var statusSection: StatusSection
     var sections: [MenuSection]
     var footer: Footer
+    var debug: DebugSettings
 
     enum CodingKeys: String, CodingKey {
         case version
@@ -15,6 +16,7 @@ struct Config: Codable {
         case statusSection
         case sections
         case footer
+        case debug
     }
 
     init(
@@ -23,7 +25,8 @@ struct Config: Codable {
         menuBarIcon: MenuBarIcon,
         statusSection: StatusSection,
         sections: [MenuSection],
-        footer: Footer
+        footer: Footer,
+        debug: DebugSettings
     ) {
         self.version = version
         self.appTitle = appTitle
@@ -31,6 +34,7 @@ struct Config: Codable {
         self.statusSection = statusSection
         self.sections = sections
         self.footer = footer
+        self.debug = debug
     }
 
     init(from decoder: Decoder) throws {
@@ -41,6 +45,7 @@ struct Config: Codable {
         statusSection = try container.decodeIfPresent(StatusSection.self, forKey: .statusSection) ?? .fallback
         sections = try container.decodeIfPresent([MenuSection].self, forKey: .sections) ?? []
         footer = try container.decodeIfPresent(Footer.self, forKey: .footer) ?? .fallback
+        debug = try container.decodeIfPresent(DebugSettings.self, forKey: .debug) ?? .fallback
     }
 
     static let fallback: Config = {
@@ -50,7 +55,8 @@ struct Config: Codable {
             menuBarIcon: .fallback,
             statusSection: .fallback,
             sections: [],
-            footer: .fallback
+            footer: .fallback,
+            debug: .fallback
         )
     }()
 }
@@ -124,6 +130,12 @@ struct Footer: Codable {
     var showQuit: Bool
 
     static let fallback = Footer(showReloadConfig: true, showOpenConfig: true, showRevealConfig: true, showRelaunch: true, showQuit: true)
+}
+
+struct DebugSettings: Codable {
+    var showWindow: Bool
+
+    static let fallback = DebugSettings(showWindow: false)
 }
 
 final class ConfigManager {

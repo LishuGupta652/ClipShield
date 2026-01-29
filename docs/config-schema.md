@@ -24,6 +24,8 @@ Config
     showRevealConfig: boolean
     showRelaunch: boolean
     showQuit: boolean
+  debug:
+    showWindow: boolean
 
 MenuSection
   title?: string

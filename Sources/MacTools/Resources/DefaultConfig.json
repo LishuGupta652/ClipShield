@@ -57,5 +57,8 @@
     "showRevealConfig": true,
     "showRelaunch": true,
     "showQuit": true
+  },
+  "debug": {
+    "showWindow": false
   }
 }

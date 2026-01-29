@@ -32,7 +32,7 @@ final class ActionPayload: NSObject {
 }
 
 @main
-final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
+final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDelegate {
     private var statusItem: NSStatusItem!
     private let menu = NSMenu()
     private let statusProvider = StatusProvider()
@@ -46,21 +46,34 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var clipboardItem: NSMenuItem?
 
     private var refreshTimer: Timer?
+    private var debugWindow: NSWindow?
 
     private var displayTitle: String {
         let trimmed = config.appTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.isEmpty ? "MacTools" : trimmed
     }
 
+    private var shouldShowDebugWindow: Bool {
+        let envFlag = ProcessInfo.processInfo.environment["MACTOOLS_DEBUG"] == "1"
+        return envFlag || config.debug.showWindow
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApp.setActivationPolicy(.accessory)
         config = configManager.loadConfig()
         statusProvider.updateTimeFormat(config.statusSection.timeFormat)
+        if shouldShowDebugWindow {
+            NSApp.setActivationPolicy(.regular)
+        } else {
+            NSApp.setActivationPolicy(.accessory)
+        }
 
         setupStatusItem()
         buildMenu()
         startRefreshTimer()
         updateDynamicItems()
+        if shouldShowDebugWindow {
+            showDebugWindow()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -69,6 +82,12 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func menuWillOpen(_ menu: NSMenu) {
         updateDynamicItems()
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow, window == debugWindow {
+            debugWindow = nil
+        }
     }
 
     private func setupStatusItem() {
@@ -271,6 +290,91 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
+    private func showDebugWindow() {
+        if let debugWindow {
+            debugWindow.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 460, height: 280),
+            styleMask: [.titled, .closable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "\(displayTitle) Debug"
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.delegate = self
+
+        let contentView = NSView()
+        window.contentView = contentView
+
+        let titleLabel = NSTextField(labelWithString: "\(displayTitle) is running")
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+
+        let infoLabel = NSTextField(labelWithString: "This is a menu-bar-only app. The icon appears on the primary display’s menu bar.")
+        infoLabel.font = .systemFont(ofSize: 13)
+        infoLabel.textColor = .secondaryLabelColor
+        infoLabel.maximumNumberOfLines = 0
+
+        let hintLabel = NSTextField(labelWithString: "Tip: disable menu bar auto-hide or free up space if you don’t see the icon.")
+        hintLabel.font = .systemFont(ofSize: 12)
+        hintLabel.textColor = .secondaryLabelColor
+        hintLabel.maximumNumberOfLines = 0
+
+        let reloadButton = NSButton(title: "Reload Config", target: self, action: #selector(reloadConfigFromDebug))
+        let openButton = NSButton(title: "Open Config", target: self, action: #selector(openConfigFromDebug))
+        let revealButton = NSButton(title: "Reveal in Finder", target: self, action: #selector(revealConfigFromDebug))
+        let relaunchButton = NSButton(title: "Relaunch", target: self, action: #selector(relaunchFromDebug))
+        let quitButton = NSButton(title: "Quit", target: self, action: #selector(quitFromDebug))
+
+        let buttonStack = NSStackView(views: [reloadButton, openButton, revealButton])
+        buttonStack.orientation = .horizontal
+        buttonStack.spacing = 8
+
+        let buttonStack2 = NSStackView(views: [relaunchButton, quitButton])
+        buttonStack2.orientation = .horizontal
+        buttonStack2.spacing = 8
+
+        let stack = NSStackView(views: [titleLabel, infoLabel, hintLabel, buttonStack, buttonStack2])
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 12
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        contentView.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20)
+        ])
+
+        debugWindow = window
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc private func reloadConfigFromDebug() {
+        reloadConfig()
+    }
+
+    @objc private func openConfigFromDebug() {
+        configManager.openConfig()
+    }
+
+    @objc private func revealConfigFromDebug() {
+        configManager.revealConfigInFinder()
+    }
+
+    @objc private func relaunchFromDebug() {
+        Relauncher.relaunch()
+    }
+
+    @objc private func quitFromDebug() {
+        NSApp.terminate(nil)
+    }
+
     @objc private func handleConfiguredAction(_ sender: NSMenuItem) {
         guard let payload = sender.representedObject as? ActionPayload else { return }
 
@@ -317,5 +421,11 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
         applyMenuBarIcon()
         buildMenu()
         updateDynamicItems()
+        if shouldShowDebugWindow {
+            showDebugWindow()
+        } else {
+            debugWindow?.close()
+            debugWindow = nil
+        }
     }
 }

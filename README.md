@@ -197,6 +197,7 @@ Other top-level config keys:
 - `appTitle` (menu header and tooltip)
 - `menuBarIcon` (SF Symbol name or custom icon path)
 - `statusSection` (toggle dynamic status items)
+- `debug` (show a debug window on launch)
 
 - `openSettings` (paneID)
 - `openApp` (path)
