@@ -3,15 +3,21 @@ import CoreWLAN
 import IOKit.ps
 
 final class StatusProvider {
-    private let formatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter
-    }()
+    private var timeFormat: String?
+
+    func updateTimeFormat(_ format: String?) {
+        timeFormat = format
+    }
 
     func timeStatus() -> String {
-        "Time: \(formatter.string(from: Date()))"
+        let formatter = DateFormatter()
+        if let timeFormat, !timeFormat.isEmpty {
+            formatter.dateFormat = timeFormat
+        } else {
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+        }
+        return "Time: \(formatter.string(from: Date()))"
     }
 
     func batteryStatus() -> String {
