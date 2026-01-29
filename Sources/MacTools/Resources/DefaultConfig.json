@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "menuBarIcon": {
+    "symbolName": "hammer.circle.fill",
+    "accessibilityLabel": "MacTools"
+  },
+  "statusSection": {
+    "title": "Status",
+    "showTime": true,
+    "showBattery": true,
+    "showWiFi": true,
+    "showClipboard": true,
+    "timeFormat": "EEE, MMM d h:mm a"
+  },
+  "sections": [
+    {
+      "title": "System Settings",
+      "items": [
+        { "type": "openSettings", "title": "Wi-Fi Settings...", "paneID": "com.apple.preference.network" },
+        { "type": "openSettings", "title": "Bluetooth Settings...", "paneID": "com.apple.preference.bluetooth" },
+        { "type": "openSettings", "title": "Sound Settings...", "paneID": "com.apple.preference.sound" },
+        { "type": "openSettings", "title": "Focus Settings...", "paneID": "com.apple.preference.focus" },
+        { "type": "openSettings", "title": "Displays Settings...", "paneID": "com.apple.preference.displays" },
+        { "type": "openSettings", "title": "Keyboard Settings...", "paneID": "com.apple.preference.keyboard" },
+        { "type": "openSettings", "title": "Battery Settings...", "paneID": "com.apple.preference.battery" },
+        { "type": "openSettings", "title": "Date & Time Settings...", "paneID": "com.apple.preference.datetime" }
+      ]
+    },
+    {
+      "title": "Productivity",
+      "items": [
+        { "type": "openApp", "title": "Calendar", "path": "/System/Applications/Calendar.app" },
+        { "type": "openApp", "title": "Clock", "path": "/System/Applications/Clock.app" },
+        { "type": "openApp", "title": "Screenshot Tool", "path": "/System/Applications/Utilities/Screenshot.app" },
+        { "type": "appleScript", "title": "Trigger Spotlight", "script": "tell application \"System Events\" to keystroke space using command down" },
+        { "type": "clipboardClear", "title": "Clear Clipboard" }
+      ]
+    },
+    {
+      "title": "Maintenance",
+      "items": [
+        { "type": "shell", "title": "Restart Finder", "command": "/usr/bin/killall", "arguments": ["Finder"] }
+      ]
+    },
+    {
+      "title": "Custom",
+      "items": [
+        { "type": "openURL", "title": "Open macOS User Guide", "url": "https://support.apple.com/guide/mac-help/welcome/mac" },
+        { "type": "shell", "title": "Say Hello", "command": "/usr/bin/say", "arguments": ["Hello from MacTools"] }
+      ]
+    }
+  ],
+  "footer": {
+    "showReloadConfig": true,
+    "showOpenConfig": true,
+    "showRevealConfig": true,
+    "showRelaunch": true,
+    "showQuit": true
+  }
+}

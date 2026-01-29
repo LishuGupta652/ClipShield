@@ -11,7 +11,11 @@ let package = Package(
         .executableTarget(
             name: "MacTools",
             path: "Sources/MacTools",
-            resources: [.process("Resources")]
+            resources: [.process("Resources")],
+            linkerSettings: [
+                .linkedFramework("CoreWLAN"),
+                .linkedFramework("IOKit")
+            ]
         )
     ]
 )
