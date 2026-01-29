@@ -2,8 +2,6 @@
 
 # MacTools (Menu Bar Boilerplate)
 
-![MacTools](docs/assets/logo.svg)
-
 MacTools is a complete, minimal macOS menu bar app scaffold you can customize into your personal "Mac tools" suite. It ships with:
 
 - A working menu bar app (AppKit)
@@ -14,6 +12,10 @@ MacTools is a complete, minimal macOS menu bar app scaffold you can customize in
 - A Homebrew Cask template
 
 > This repo is a boilerplate. The menu items are intentionally simple and safe (no private APIs). You can expand or replace them as needed.
+
+## Menu Preview
+
+![MacTools menu preview](docs/Menu_Preview.png)
 
 ---
 
