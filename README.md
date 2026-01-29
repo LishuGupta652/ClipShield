@@ -147,12 +147,14 @@ MacTools loads a JSON config from:
 ~/Library/Application Support/MacTools/config.json
 ```
 
-The first launch copies a default config from the app bundle. Edit this file and choose **Reload Config** from the menu.
+The first launch copies a default config from the app bundle (source file: `Sources/MacTools/Resources/DefaultConfig.json`). Edit this file and choose **Reload Config** from the menu.
+The config is strict JSON (no comments).
 
 ### Example Config Snippet
 
 ```json
 {
+  "appTitle": "MacTools",
   "menuBarIcon": { "symbolName": "sparkles", "accessibilityLabel": "MacTools" },
   "sections": [
     {
@@ -168,6 +170,12 @@ The first launch copies a default config from the app bundle. Edit this file and
 ```
 
 ### Supported Action Types
+
+Other top-level config keys:
+
+- `appTitle` (menu header and tooltip)
+- `menuBarIcon` (SF Symbol name or custom icon path)
+- `statusSection` (toggle dynamic status items)
 
 - `openSettings` (paneID)
 - `openApp` (path)

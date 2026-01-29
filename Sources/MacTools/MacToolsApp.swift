@@ -47,6 +47,11 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private var refreshTimer: Timer?
 
+    private var displayTitle: String {
+        let trimmed = config.appTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "MacTools" : trimmed
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         config = configManager.loadConfig()
@@ -77,9 +82,9 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let icon = resolveMenuBarIcon()
         button.image = icon
         button.image?.isTemplate = true
-        button.toolTip = config.menuBarIcon.accessibilityLabel ?? "MacTools"
+        button.toolTip = config.menuBarIcon.accessibilityLabel ?? displayTitle
         if icon == nil {
-            button.title = "MacTools"
+            button.title = displayTitle
         } else {
             button.title = ""
         }
@@ -100,7 +105,7 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
             return NSImage(systemSymbolName: symbolName, accessibilityDescription: config.menuBarIcon.accessibilityLabel)
         }
 
-        return NSImage(systemSymbolName: "hammer.circle.fill", accessibilityDescription: "MacTools")
+        return NSImage(systemSymbolName: "hammer.circle.fill", accessibilityDescription: displayTitle)
     }
 
     private func buildMenu() {
@@ -113,7 +118,7 @@ final class MacToolsApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
         wifiItem = nil
         clipboardItem = nil
 
-        let header = NSMenuItem(title: "MacTools", action: nil, keyEquivalent: "")
+        let header = NSMenuItem(title: displayTitle, action: nil, keyEquivalent: "")
         header.isEnabled = false
         menu.addItem(header)
         menu.addItem(.separator())

@@ -2,25 +2,55 @@ import Cocoa
 
 struct Config: Codable {
     var version: Int
+    var appTitle: String
     var menuBarIcon: MenuBarIcon
     var statusSection: StatusSection
     var sections: [MenuSection]
     var footer: Footer
 
+    enum CodingKeys: String, CodingKey {
+        case version
+        case appTitle
+        case menuBarIcon
+        case statusSection
+        case sections
+        case footer
+    }
+
+    init(
+        version: Int,
+        appTitle: String,
+        menuBarIcon: MenuBarIcon,
+        statusSection: StatusSection,
+        sections: [MenuSection],
+        footer: Footer
+    ) {
+        self.version = version
+        self.appTitle = appTitle
+        self.menuBarIcon = menuBarIcon
+        self.statusSection = statusSection
+        self.sections = sections
+        self.footer = footer
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        appTitle = try container.decodeIfPresent(String.self, forKey: .appTitle) ?? "MacTools"
+        menuBarIcon = try container.decodeIfPresent(MenuBarIcon.self, forKey: .menuBarIcon) ?? .fallback
+        statusSection = try container.decodeIfPresent(StatusSection.self, forKey: .statusSection) ?? .fallback
+        sections = try container.decodeIfPresent([MenuSection].self, forKey: .sections) ?? []
+        footer = try container.decodeIfPresent(Footer.self, forKey: .footer) ?? .fallback
+    }
+
     static let fallback: Config = {
         Config(
             version: 1,
-            menuBarIcon: MenuBarIcon(symbolName: "hammer.circle.fill", iconPath: nil, accessibilityLabel: "MacTools"),
-            statusSection: StatusSection(
-                title: "Status",
-                showTime: true,
-                showBattery: true,
-                showWiFi: true,
-                showClipboard: true,
-                timeFormat: "EEE, MMM d h:mm a"
-            ),
+            appTitle: "MacTools",
+            menuBarIcon: .fallback,
+            statusSection: .fallback,
             sections: [],
-            footer: Footer(showReloadConfig: true, showOpenConfig: true, showRevealConfig: true, showRelaunch: true, showQuit: true)
+            footer: .fallback
         )
     }()
 }
@@ -29,6 +59,8 @@ struct MenuBarIcon: Codable {
     var symbolName: String?
     var iconPath: String?
     var accessibilityLabel: String?
+
+    static let fallback = MenuBarIcon(symbolName: "hammer.circle.fill", iconPath: nil, accessibilityLabel: "MacTools")
 }
 
 struct StatusSection: Codable {
@@ -38,6 +70,15 @@ struct StatusSection: Codable {
     var showWiFi: Bool
     var showClipboard: Bool
     var timeFormat: String?
+
+    static let fallback = StatusSection(
+        title: "Status",
+        showTime: true,
+        showBattery: true,
+        showWiFi: true,
+        showClipboard: true,
+        timeFormat: "EEE, MMM d h:mm a"
+    )
 }
 
 struct MenuSection: Codable {
@@ -47,16 +88,16 @@ struct MenuSection: Codable {
 
 struct MenuItemConfig: Codable {
     var type: MenuItemType
-    var title: String?
-    var paneID: String?
-    var url: String?
-    var path: String?
-    var command: String?
-    var arguments: [String]?
-    var script: String?
-    var text: String?
-    var enabled: Bool?
-    var keyEquivalent: String?
+    var title: String? = nil
+    var paneID: String? = nil
+    var url: String? = nil
+    var path: String? = nil
+    var command: String? = nil
+    var arguments: [String]? = nil
+    var script: String? = nil
+    var text: String? = nil
+    var enabled: Bool? = nil
+    var keyEquivalent: String? = nil
 }
 
 enum MenuItemType: String, Codable {
@@ -81,6 +122,8 @@ struct Footer: Codable {
     var showRevealConfig: Bool
     var showRelaunch: Bool
     var showQuit: Bool
+
+    static let fallback = Footer(showReloadConfig: true, showOpenConfig: true, showRevealConfig: true, showRelaunch: true, showQuit: true)
 }
 
 final class ConfigManager {

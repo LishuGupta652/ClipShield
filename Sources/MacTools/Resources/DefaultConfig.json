@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "appTitle": "MacTools",
   "menuBarIcon": {
     "symbolName": "hammer.circle.fill",
     "accessibilityLabel": "MacTools"
