@@ -5,6 +5,7 @@ MacTools is a complete, minimal macOS menu bar app scaffold you can customize in
 - A working menu bar app (AppKit)
 - Dynamic status items (time, battery, Wi-Fi, clipboard)
 - Quick actions for common system settings and utilities
+- A JSON config file for customization (menu sections, actions, icon)
 - Build, package, and release scripts
 - A Homebrew Cask template
 
@@ -138,11 +139,75 @@ Gatekeeper will warn on unsigned apps. Use the helper script:
 
 ---
 
-## Customize the App
+## Customize the App (Config-first)
 
-### Add or Remove Menu Items
+MacTools loads a JSON config from:
 
-Edit `Sources/MacTools/MacToolsApp.swift` to change menu items and actions.
+```
+~/Library/Application Support/MacTools/config.json
+```
+
+The first launch copies a default config from the app bundle. Edit this file and choose **Reload Config** from the menu.
+
+### Example Config Snippet
+
+```json
+{
+  "menuBarIcon": { "symbolName": "sparkles", "accessibilityLabel": "MacTools" },
+  "sections": [
+    {
+      "title": "Quick Actions",
+      "items": [
+        { "type": "openSettings", "title": "Wi-Fi Settings...", "paneID": "com.apple.preference.network" },
+        { "type": "openURL", "title": "Open Docs", "url": "https://example.com" },
+        { "type": "shell", "title": "Say Hi", "command": "/usr/bin/say", "arguments": ["Hi"] }
+      ]
+    }
+  ]
+}
+```
+
+### Supported Action Types
+
+- `openSettings` (paneID)
+- `openApp` (path)
+- `openURL` (url)
+- `shell` (command, arguments)
+- `appleScript` (script)
+- `clipboardCopy` (text)
+- `clipboardClear`
+- `reloadConfig`
+- `openConfig`
+- `revealConfig`
+- `relaunch`
+- `quit`
+- `separator`
+
+### Custom Menu Bar Icon
+
+You can choose either:
+
+- **SF Symbol** via `menuBarIcon.symbolName`, or
+- **Custom file** via `menuBarIcon.iconPath` (relative to your config file directory)
+
+Tip: menu bar icons look best as template (monochrome) PNGs.
+
+### App Icon (Dock / Finder)
+
+If you want a custom app icon for the `.app` bundle, add:
+
+```
+Resources/AppIcon.icns
+```
+
+Then re-run `./scripts/package_app.sh`.
+
+### Advanced: Code-level Customization
+
+If you want deeper behavior changes, edit:
+
+- `Sources/MacTools/MacToolsApp.swift` (menu building, actions)
+- `Sources/MacTools/StatusProvider.swift` (dynamic status logic)
 
 ### Update System Settings Links
 
