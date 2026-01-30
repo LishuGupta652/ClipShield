@@ -64,7 +64,7 @@ public final class Redactor {
         let maskCharacter = customRule?.maskCharacter?.first
             ?? override?.maskCharacter?.first
             ?? config.redaction.maskCharacter.first
-            ?? "*"
+            ?? Character("*")
         let preserveLast = customRule?.preserveLastDigits ?? override?.preserveLastDigits ?? config.redaction.preserveLastDigits
 
         switch type {

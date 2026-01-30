@@ -100,14 +100,14 @@ public final class PIIDetector {
                 let digits = value.digitsOnly()
                 guard digits.count >= 13 && digits.count <= 19 else { return false }
                 guard Set(digits).count > 1 else { return false }
-                return luhnCheck(digits)
+                return self.luhnCheck(digits)
             }))
         }
 
         if config.detection.isEnabled(.iban) {
             matches.append(contentsOf: findMatches(regex: ibanRegex, in: nsText, type: .iban, validator: { value in
                 let normalized = value.replacingOccurrences(of: " ", with: "")
-                return ibanIsValid(normalized)
+                return self.ibanIsValid(normalized)
             }))
         }
 
