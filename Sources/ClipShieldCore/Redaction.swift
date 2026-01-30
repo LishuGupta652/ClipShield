@@ -35,6 +35,9 @@ public final class Redactor {
         case .tokenize: return .tokenize
         case .remove: return .remove
         case .auto:
+            if match.type == .custom, let custom = customRule(for: match, config: config), let strategy = custom.strategy {
+                return strategy
+            }
             if let override = config.redaction.override(for: match.type) {
                 return override.strategy
             }
@@ -55,8 +58,14 @@ public final class Redactor {
 
     private func mask(value: String, type: PIIType, config: AppConfig, custom: String?) -> String {
         let override = config.redaction.override(for: type)
-        let maskCharacter = override?.maskCharacter?.first ?? config.redaction.maskCharacter.first ?? "*"
-        let preserveLast = override?.preserveLastDigits ?? config.redaction.preserveLastDigits
+        let customRule = custom.flatMap { id in
+            config.detection.customRules.first(where: { $0.id == id })
+        }
+        let maskCharacter = customRule?.maskCharacter?.first
+            ?? override?.maskCharacter?.first
+            ?? config.redaction.maskCharacter.first
+            ?? "*"
+        let preserveLast = customRule?.preserveLastDigits ?? override?.preserveLastDigits ?? config.redaction.preserveLastDigits
 
         switch type {
         case .pan:
@@ -165,6 +174,11 @@ public final class Redactor {
         case .custom:
             return value.trimmed()
         }
+    }
+
+    private func customRule(for match: DetectionMatch, config: AppConfig) -> CustomRule? {
+        guard match.type == .custom, let ruleID = match.ruleID else { return nil }
+        return config.detection.customRules.first(where: { $0.id == ruleID })
     }
 
     private func apply(replacements: [Replacement], to text: String) -> String {
