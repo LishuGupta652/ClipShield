@@ -1,6 +1,9 @@
 <p align="center">
   <img src="docs/assets/logo.svg" alt="ClipShield" width="96" />
 </p>
+<p align="center">
+  <img src="docs/showcase.png" alt="ClipShield showcase" width="720" />
+</p>
 
 # ClipShield
 
