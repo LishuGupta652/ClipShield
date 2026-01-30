@@ -253,6 +253,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     "strategy": config.monitoring.safePaste.action.rawValue,
                     "types": detection.summary()
                 ])
+                let cleanedDetection = detector.detect(in: redacted, config: config)
+                lastDetection = cleanedDetection
+                lastPreview = summarize(redacted)
             }
         }
 
@@ -306,6 +309,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
             "types": detection.summary(),
             "matches": String(detection.matches.count)
         ])
+        let cleanedDetection = detector.detect(in: redacted, config: config)
+        lastDetection = cleanedDetection
+        lastPreview = summarize(redacted)
         updateMenuState()
     }
 
@@ -326,6 +332,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
             "types": detection.summary(),
             "matches": String(detection.matches.count)
         ])
+        let cleanedDetection = detector.detect(in: tokenized, config: config)
+        lastDetection = cleanedDetection
+        lastPreview = summarize(tokenized)
         updateMenuState()
     }
 
