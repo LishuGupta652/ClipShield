@@ -44,7 +44,7 @@
   },
   "redaction": {
     "defaultStrategy": "mask",
-    "maskCharacter": "•",
+    "maskCharacter": "*",
     "preserveLastDigits": 4,
     "perType": {
       "pan": { "strategy": "mask", "preserveLastDigits": 4 },

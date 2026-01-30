@@ -2,11 +2,11 @@
 
 ClipShield ships with strong default rules:
 
-- **PAN (payment cards)**: 13–19 digits + Luhn validation
+- **PAN (payment cards)**: 13-19 digits + Luhn validation
 - **IBAN**: country code + checksum validation (mod 97)
 - **SSN**: excludes invalid ranges (000/666/9xx)
 - **Email**: RFC-style pattern
-- **Phone**: 10–15 digits with separators
+- **Phone**: 10-15 digits with separators
 
 ## Redaction Strategies
 

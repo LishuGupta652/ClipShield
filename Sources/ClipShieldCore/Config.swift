@@ -199,7 +199,7 @@ public struct RedactionConfig: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         defaultStrategy = try container.decodeIfPresent(RedactionStrategy.self, forKey: .defaultStrategy) ?? .mask
-        maskCharacter = try container.decodeIfPresent(String.self, forKey: .maskCharacter) ?? "•"
+        maskCharacter = try container.decodeIfPresent(String.self, forKey: .maskCharacter) ?? "*"
         preserveLastDigits = try container.decodeIfPresent(Int.self, forKey: .preserveLastDigits) ?? 4
         let decodedOverrides = try container.decodeIfPresent([String: RedactionOverride].self, forKey: .perType) ?? [:]
         perType = RedactionConfig.defaultOverrides.merging(decodedOverrides) { _, new in new }
@@ -216,7 +216,7 @@ public struct RedactionConfig: Codable {
 
     public static let fallback = RedactionConfig(
         defaultStrategy: .mask,
-        maskCharacter: "•",
+        maskCharacter: "*",
         preserveLastDigits: 4,
         perType: RedactionConfig.defaultOverrides,
         tokenization: .fallback
@@ -292,6 +292,10 @@ public final class ConfigManager {
 
     private static func normalizeConfigURL(_ url: URL) -> URL {
         if url.hasDirectoryPath {
+            return url.appendingPathComponent("config.json")
+        }
+        var isDirectory: ObjCBool = false
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue {
             return url.appendingPathComponent("config.json")
         }
         return url

@@ -220,6 +220,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func refreshClipboardSnapshot() {
         guard let text = ClipboardService.readText(), !text.isEmpty else {
             lastPreview = nil
+            lastDetection = DetectionResult(matches: [], textLength: 0)
+            lastScanDate = Date()
+            updateMenuState()
             return
         }
         let detection = detector.detect(in: text, config: config)
@@ -266,7 +269,7 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let collapsed = text.replacingOccurrences(of: "\n", with: " ").trimmed()
         let maxLength = 60
         if collapsed.count > maxLength {
-            return String(collapsed.prefix(maxLength)) + "…"
+            return String(collapsed.prefix(maxLength)) + "..."
         }
         return collapsed
     }
@@ -341,6 +344,8 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func clearClipboard() {
         ClipboardService.clear()
         lastAction = "Clipboard cleared"
+        lastDetection = DetectionResult(matches: [], textLength: 0)
+        lastPreview = nil
         updateMenuState()
     }
 
