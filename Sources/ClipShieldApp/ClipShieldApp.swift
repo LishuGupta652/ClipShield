@@ -243,6 +243,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 "types": detection.summary(),
                 "matches": String(detection.matches.count)
             ])
+            if config.monitoring.notifyOnDetect {
+                deliverNotification(title: "PII detected", body: detection.summary())
+            }
         }
 
         if config.monitoring.safePaste.enabled, !detection.matches.isEmpty {
@@ -256,6 +259,9 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     "strategy": config.monitoring.safePaste.action.rawValue,
                     "types": detection.summary()
                 ])
+                if config.monitoring.safePaste.notifyOnAutoRedact {
+                    deliverNotification(title: "Safe Paste applied", body: "Clipboard redacted (\(config.monitoring.safePaste.action.rawValue)).")
+                }
                 let cleanedDetection = detector.detect(in: redacted, config: config)
                 lastDetection = cleanedDetection
                 lastPreview = summarize(redacted)
@@ -272,6 +278,13 @@ final class ClipShieldApp: NSObject, NSApplicationDelegate, NSMenuDelegate {
             return String(collapsed.prefix(maxLength)) + "..."
         }
         return collapsed
+    }
+
+    private func deliverNotification(title: String, body: String) {
+        let notification = NSUserNotification()
+        notification.title = title
+        notification.informativeText = body
+        NSUserNotificationCenter.default.deliver(notification)
     }
 
     private func redactionMode(from strategy: RedactionStrategy) -> RedactionMode {
