@@ -1,12 +1,12 @@
-![MacTools Logo](assets/logo.svg)
+![ClipShield Logo](assets/logo.svg)
 
-# MacTools
+# ClipShield
 
-> A customizable macOS menu bar toolkit for personal workflows.
+> A local-first clipboard guardian that redacts PII before you paste.
 
-- Status items: time, battery, Wi-Fi, clipboard
-- Config-driven actions and menus
-- Easy packaging, cask distribution, and docs
+- PAN/IBAN/SSN/email/phone detection with validation
+- Safe Paste mode and one-click redaction
+- Custom regex rules + CLI
 
 [Get Started](getting-started.md)
-[GitHub](https://github.com/LishuGupta652/macos-toolkit)
+[GitHub](https://github.com/yourname/clipshield)

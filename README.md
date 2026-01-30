@@ -1,332 +1,109 @@
 <p align="center">
-  <img src="docs/assets/logo.svg" alt="MacTools" width="96" />
+  <img src="docs/assets/logo.svg" alt="ClipShield" width="96" />
 </p>
 
-# MacTools (Menu Bar Boilerplate)
+# ClipShield
 
-MacTools is a complete, minimal macOS menu bar app scaffold you can customize into your personal "Mac tools" suite. It ships with:
+ClipShield is a macOS menu bar clipboard guardian that detects and redacts PII before it hits Slack, Jira, Notion, or any other app. It runs locally, stays configurable, and ships with a CLI for batch scanning and redaction.
 
-- A working menu bar app (AppKit)
-- Dynamic status items (time, battery, Wi-Fi, clipboard)
-- Quick actions for common system settings and utilities
-- A JSON config file for customization (menu sections, actions, icon)
-- Build, package, and release scripts
-- A Homebrew Cask template
+## Why ClipShield
 
-> This repo is a boilerplate. The menu items are intentionally simple and safe (no private APIs). You can expand or replace them as needed.
-
-## Menu Preview
-
-<p align="center">
-  <img src="docs/Menu_Preview.png" alt="MacTools menu preview" width="320" />
-</p>
-
----
+- Detects PAN/IBAN/SSN/email/phone with validation (Luhn + IBAN checksum)
+- Custom regex rules per team needs
+- One-click redact or tokenize from the menu bar
+- Safe Paste mode auto-redacts on clipboard change
+- Logs are local and **off by default**
+- CLI for scan/redact/tokenize workflows
 
 ## Requirements
 
 - macOS 13 (Ventura) or later
 - Xcode Command Line Tools
 
----
+## Build and Run
 
-## Menu Bar Checklist (Reference)
-
-### Appearance & Layout
-
-- Menu bar visible at top of screen
-- Auto-hide turned on/off as desired (System Settings -> Desktop & Dock)
-- Icons not overcrowded
-
-### Useful Controls Added
-
-- Wi-Fi icon enabled
-- Battery percentage showing
-- Sound/Volume control available
-- Bluetooth toggle accessible
-- Time & Date format correct
-- Spotlight search working
-
-### Control Center Setup
-
-- Control Center icons added to menu bar
-- Focus / Do Not Disturb available
-- Screen brightness and keyboard brightness accessible
-
-### Productivity Tools
-
-- Calendar or clock widget pinned
-- Screenshot / screen recording shortcut available
-- Clipboard manager (optional) installed
-
-### Troubleshooting
-
-- Toolbar not frozen or missing
-- Apps showing correct menu options
-- Restart Finder if icons disappear
-
----
-
-## Project Structure
-
-```
-mac-tools/
-  Package.swift
-  Sources/MacTools/
-    MacToolsApp.swift
-    StatusProvider.swift
-    Actions.swift
-  Resources/
-    Info.plist
-  scripts/
-    build.sh
-    package_app.sh
-    release.sh
-    sign_notarize.sh
-  Casks/
-    mactools.rb
-```
-
----
-
-## Build and Run (Local)
-
-Build the executable:
+Build the binaries:
 
 ```bash
 ./scripts/build.sh
 ```
 
-Run from source (menu bar item appears):
+Run the menu bar app:
 
 ```bash
-swift run
+swift run ClipShieldApp
 ```
 
-## Documentation Site
-
-Docs live in `docs/` and are rendered with Docsify (no build step).
-
-Preview locally:
+Run the CLI:
 
 ```bash
-cd docs
-python3 -m http.server 8080
+swift run clipshield --help
 ```
 
-Then open `http://localhost:8080`.
+## Configuration
 
-Docs site: `https://macos-toolkit.lishugupta.in`
+ClipShield loads a JSON config from:
 
-If you prefer Docsify's dev server:
+```
+~/Library/Application Support/ClipShield/config.json
+```
+
+On first launch, the default config is copied into that path. Update it and use **Reload Config** from the menu bar.
+
+Key settings you can tune:
+
+- `monitoring.enabled` and `monitoring.safePaste`
+- `detection.builtins` (pan/iban/ssn/email/phone)
+- `detection.customRules` for regex-based rules
+- `redaction.perType` and tokenization prefix/salt
+- `logging.enabled` (off by default)
+
+Example custom rule:
+
+```json
+{
+  "id": "slack_token",
+  "label": "Slack Token",
+  "pattern": "\\bxox[baprs]-[0-9a-zA-Z-]{10,48}\\b",
+  "enabled": true,
+  "strategy": "tokenize"
+}
+```
+
+## CLI Examples
+
+Scan text:
 
 ```bash
-npx docsify-cli serve docs
+echo "My SSN is 123-45-6789" | swift run clipshield scan --stdin
 ```
 
----
+Redact a file:
 
-## Package a .app
+```bash
+swift run clipshield redact --file ./notes.txt --strategy mask
+```
+
+Tokenize and copy to clipboard:
+
+```bash
+swift run clipshield tokenize --text "4111 1111 1111 1111" --copy
+```
+
+## Packaging
 
 Create an app bundle under `dist/`:
 
 ```bash
-./scripts/package_app.sh 1.0.0
+./scripts/package_app.sh 0.1.0
 ```
 
-Optional environment overrides:
+Create a release zip:
 
 ```bash
-BUNDLE_ID=com.yourname.mactools ./scripts/package_app.sh 1.0.0
+./scripts/release.sh 0.1.0
 ```
 
----
+## Local-Only by Design
 
-## Create a Release ZIP + SHA
-
-```bash
-./scripts/release.sh 1.0.0
-```
-
-This creates:
-
-```
-dist/MacTools-1.0.0.zip
-```
-
-And prints the SHA-256 you will paste into the cask.
-
----
-
-## Signing and Notarization (Recommended)
-
-Gatekeeper will warn on unsigned apps. Use the helper script:
-
-```bash
-./scripts/sign_notarize.sh dist/MacTools.app "Developer ID Application: Your Name" you@example.com TEAMID APP_SPECIFIC_PASSWORD
-```
-
-> You can also notarize the ZIP instead of the .app if you prefer. Adjust the script accordingly.
-
----
-
-## Customize the App (Config-first)
-
-MacTools loads a JSON config from:
-
-```
-~/Library/Application Support/MacTools/config.json
-```
-
-The first launch copies a default config from the app bundle (source file: `Sources/MacTools/Resources/DefaultConfig.json`). Edit this file and choose **Reload Config** from the menu.
-The config is strict JSON (no comments).
-
-### Example Config Snippet
-
-```json
-{
-  "appTitle": "MacTools",
-  "menuBarIcon": { "symbolName": "sparkles", "accessibilityLabel": "MacTools" },
-  "sections": [
-    {
-      "title": "Quick Actions",
-      "items": [
-        { "type": "openSettings", "title": "Wi-Fi Settings...", "paneID": "com.apple.preference.network" },
-        { "type": "openURL", "title": "Open Docs", "url": "https://example.com" },
-        { "type": "shell", "title": "Say Hi", "command": "/usr/bin/say", "arguments": ["Hi"] }
-      ]
-    }
-  ]
-}
-```
-
-### Supported Action Types
-
-Other top-level config keys:
-
-- `appTitle` (menu header and tooltip)
-- `menuBarIcon` (SF Symbol name or custom icon path)
-- `statusSection` (toggle dynamic status items)
-- `debug` (show a debug window on launch)
-
-- `openSettings` (paneID)
-- `openApp` (path)
-- `openURL` (url)
-- `shell` (command, arguments)
-- `appleScript` (script)
-- `clipboardCopy` (text)
-- `clipboardClear`
-- `reloadConfig`
-- `openConfig`
-- `revealConfig`
-- `relaunch`
-- `quit`
-- `separator`
-
-### Custom Menu Bar Icon
-
-You can choose either:
-
-- **SF Symbol** via `menuBarIcon.symbolName`, or
-- **Custom file** via `menuBarIcon.iconPath` (relative to your config file directory)
-
-Tip: menu bar icons look best as template (monochrome) PNGs.
-
-Example for a custom file:
-
-```json
-{
-  "menuBarIcon": {
-    "iconPath": "MenuBarIcon.png",
-    "accessibilityLabel": "MacTools"
-  }
-}
-```
-
-### App Icon (Dock / Finder)
-
-If you want a custom app icon for the `.app` bundle, add:
-
-```
-Resources/AppIcon.icns
-```
-
-Then re-run `./scripts/package_app.sh`.
-
-### Advanced: Code-level Customization
-
-If you want deeper behavior changes, edit:
-
-- `Sources/MacTools/MacToolsApp.swift` (menu building, actions)
-- `Sources/MacTools/StatusProvider.swift` (dynamic status logic)
-
-### Update System Settings Links
-
-System Settings pane IDs can change across macOS versions. Update them in:
-
-- `Sources/MacTools/Actions.swift`
-
-If a deep link fails, the app falls back to opening System Settings.
-
-### Update Status Items
-
-Dynamic status logic lives in:
-
-- `Sources/MacTools/StatusProvider.swift`
-
----
-
-## Homebrew Cask Publishing
-
-### 1) Host the Release ZIP
-
-Upload `dist/MacTools-1.0.0.zip` to a stable HTTPS URL (e.g., GitHub Releases).
-
-### 2) Update the Cask Template
-
-Edit `Casks/mactools.rb`:
-
-- `version`
-- `sha256`
-- `url`
-- `homepage`
-
-### 3) Install via a Personal Tap
-
-1. Create a repo named `homebrew-tap` (or similar).
-2. Add your cask file at:
-
-```
-Casks/mactools.rb
-```
-
-3. Install:
-
-```bash
-brew tap yourname/tap
-brew install --cask mactools
-```
-
-### 4) Submit to Homebrew/homebrew-cask (Optional)
-
-For public distribution:
-
-1. Fork `Homebrew/homebrew-cask`
-2. Add `Casks/mactools.rb`
-3. Open a PR
-
----
-
-## Troubleshooting
-
-- If the menu bar item does not appear, run the app once from Terminal and check for logs
-- If Spotlight trigger fails, grant Accessibility permission to MacTools
-- If icons disappear, run `killall Finder`
-
----
-
-## Notes
-
-- This app intentionally avoids private APIs.
-- Some actions may require user permissions (Accessibility, Automation).
-- You can replace the menu bar icon by adding `Resources/AppIcon.icns`.
+ClipShield never sends clipboard data to the network. All detection, redaction, and logging happen locally on your Mac.

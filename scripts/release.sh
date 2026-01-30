@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 VERSION="${1:-1.0.0}"
-APP_NAME="MacTools"
+APP_NAME="ClipShield"
 
 "$ROOT/scripts/package_app.sh" "$VERSION"
 

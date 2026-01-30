@@ -2,9 +2,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME="MacTools"
+APP_NAME="ClipShield"
 VERSION="${1:-${VERSION:-1.0.0}}"
-BUNDLE_ID="${BUNDLE_ID:-com.yourname.mactools}"
+BUNDLE_ID="${BUNDLE_ID:-com.yourname.clipshield}"
 
 BUILD_DIR="$ROOT/.build/release"
 DIST_DIR="$ROOT/dist"
@@ -21,8 +21,8 @@ mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 cp "$BUILD_DIR/$APP_NAME" "$APP_DIR/Contents/MacOS/$APP_NAME"
 cp "$INFO_PLIST_SRC" "$APP_DIR/Contents/Info.plist"
 
-if [[ -d "$ROOT/Sources/MacTools/Resources" ]]; then
-  rsync -a "$ROOT/Sources/MacTools/Resources/" "$APP_DIR/Contents/Resources/"
+if [[ -d "$ROOT/Sources/ClipShieldCore/Resources" ]]; then
+  rsync -a "$ROOT/Sources/ClipShieldCore/Resources/" "$APP_DIR/Contents/Resources/"
 fi
 
 if [[ -d "$ROOT/Resources" ]]; then
