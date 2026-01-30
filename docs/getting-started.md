@@ -12,17 +12,17 @@
 ```
 
 ```bash
-swift run
+swift run ClipShieldApp
 ```
 
 A menu bar icon appears immediately.
 
 ## First Run
 
-MacTools copies a default config to:
+ClipShield copies a default config to:
 
 ```
-~/Library/Application Support/MacTools/config.json
+~/Library/Application Support/ClipShield/config.json
 ```
 
 Edit the JSON file and click **Reload Config** in the menu bar.
@@ -31,7 +31,9 @@ Edit the JSON file and click **Reload Config** in the menu bar.
 
 ```
 mac-tools/
-  Sources/MacTools/
+  Sources/ClipShieldCore/
+  Sources/ClipShieldApp/
+  Sources/ClipShieldCLI/
   Resources/
   scripts/
   Casks/
