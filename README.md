@@ -31,7 +31,7 @@ Build the binaries:
 Run the menu bar app:
 
 ```bash
-swift run ClipShieldApp
+swift run ClipShield
 ```
 
 Run the CLI:

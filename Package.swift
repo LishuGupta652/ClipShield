@@ -5,7 +5,7 @@ let package = Package(
     name: "ClipShield",
     platforms: [.macOS(.v13)],
     products: [
-        .executable(name: "ClipShield", targets: ["ClipShieldApp"]),
+        .executable(name: "ClipShield", targets: ["ClipShield"]),
         .executable(name: "clipshield", targets: ["ClipShieldCLI"])
     ],
     targets: [
@@ -15,7 +15,7 @@ let package = Package(
             resources: [.process("Resources")]
         ),
         .executableTarget(
-            name: "ClipShieldApp",
+            name: "ClipShield",
             dependencies: ["ClipShieldCore"],
             path: "Sources/ClipShieldApp"
         ),

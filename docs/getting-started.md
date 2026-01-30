@@ -12,7 +12,7 @@
 ```
 
 ```bash
-swift run ClipShieldApp
+swift run ClipShield
 ```
 
 A menu bar icon appears immediately.
