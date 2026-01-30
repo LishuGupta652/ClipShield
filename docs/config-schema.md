@@ -1,48 +1,70 @@
-# Config Schema (Reference)
+# Config Schema
 
-This is an informal schema for the `config.json` file.
-
+```json
+{
+  "version": 1,
+  "appTitle": "ClipShield",
+  "menuBarIcon": {
+    "symbolName": "shield.lefthalf.filled",
+    "alertSymbolName": "exclamationmark.triangle.fill",
+    "iconPath": "relative/path/to/icon.png",
+    "accessibilityLabel": "ClipShield"
+  },
+  "monitoring": {
+    "enabled": true,
+    "pollIntervalSeconds": 0.75,
+    "maxScanLength": 50000,
+    "safePaste": {
+      "enabled": false,
+      "action": "mask",
+      "notifyOnAutoRedact": true
+    },
+    "notifyOnDetect": false
+  },
+  "detection": {
+    "builtins": {
+      "pan": { "enabled": true },
+      "iban": { "enabled": true },
+      "ssn": { "enabled": true },
+      "email": { "enabled": true },
+      "phone": { "enabled": true }
+    },
+    "customRules": [
+      {
+        "id": "custom_id",
+        "label": "Human name",
+        "pattern": "\\b...\\b",
+        "enabled": true,
+        "strategy": "tokenize",
+        "preserveLastDigits": 4,
+        "maskCharacter": "*",
+        "caseInsensitive": true
+      }
+    ]
+  },
+  "redaction": {
+    "defaultStrategy": "mask",
+    "maskCharacter": "•",
+    "preserveLastDigits": 4,
+    "perType": {
+      "pan": { "strategy": "mask", "preserveLastDigits": 4 },
+      "iban": { "strategy": "mask", "preserveLastDigits": 4 },
+      "ssn": { "strategy": "mask", "preserveLastDigits": 4 },
+      "email": { "strategy": "mask" },
+      "phone": { "strategy": "mask", "preserveLastDigits": 2 }
+    },
+    "tokenization": {
+      "prefix": "tok_",
+      "hashLength": 10,
+      "salt": ""
+    }
+  },
+  "logging": {
+    "enabled": false,
+    "fileName": "clipshield.log"
+  },
+  "debug": {
+    "showWindow": false
+  }
+}
 ```
-Config
-  version: number
-  appTitle: string
-  menuBarIcon:
-    symbolName?: string
-    iconPath?: string
-    accessibilityLabel?: string
-  statusSection:
-    title: string
-    showTime: boolean
-    showBattery: boolean
-    showWiFi: boolean
-    showClipboard: boolean
-    timeFormat?: string
-  sections: MenuSection[]
-  footer:
-    showReloadConfig: boolean
-    showOpenConfig: boolean
-    showRevealConfig: boolean
-    showRelaunch: boolean
-    showQuit: boolean
-  debug:
-    showWindow: boolean
-
-MenuSection
-  title?: string
-  items: MenuItem[]
-
-MenuItem
-  type: string
-  title?: string
-  paneID?: string
-  url?: string
-  path?: string
-  command?: string
-  arguments?: string[]
-  script?: string
-  text?: string
-  enabled?: boolean
-  keyEquivalent?: string
-```
-
-See [Actions](actions.md) for supported `type` values.

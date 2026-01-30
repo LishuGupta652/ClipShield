@@ -1,42 +1,31 @@
 # Packaging & Release
 
-## Build
+## Create an App Bundle
 
 ```bash
-./scripts/build.sh
+./scripts/package_app.sh 0.1.0
 ```
 
-## Package the .app
+The app bundle is created under:
+
+```
+dist/ClipShield.app
+```
+
+## Create a Release ZIP
 
 ```bash
-./scripts/package_app.sh 1.0.0
+./scripts/release.sh 0.1.0
 ```
 
-Optional:
+This creates:
+
+```
+dist/ClipShield-0.1.0.zip
+```
+
+## Signing & Notarization
 
 ```bash
-BUNDLE_ID=com.yourname.mactools ./scripts/package_app.sh 1.0.0
+./scripts/sign_notarize.sh dist/ClipShield.app "Developer ID Application: Your Name" you@example.com TEAMID APP_SPECIFIC_PASSWORD
 ```
-
-## Create Release ZIP + SHA
-
-```bash
-./scripts/release.sh 1.0.0
-```
-
-Output:
-
-```
-dist/MacTools-1.0.0.zip
-```
-
-## Signing & Notarization (Recommended)
-
-```bash
-./scripts/sign_notarize.sh dist/MacTools.app "Developer ID Application: Your Name" you@example.com TEAMID APP_SPECIFIC_PASSWORD
-```
-
-Notes:
-
-- Use a Developer ID Application certificate
-- Gatekeeper will warn on unsigned apps

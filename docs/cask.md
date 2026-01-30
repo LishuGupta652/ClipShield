@@ -5,7 +5,7 @@
 Upload the release ZIP somewhere stable (e.g., GitHub Releases):
 
 ```
-MacTools-1.0.0.zip
+ClipShield-0.1.0.zip
 ```
 
 ## 2) Update the Cask Template
@@ -13,7 +13,7 @@ MacTools-1.0.0.zip
 Edit:
 
 ```
-Casks/mactools.rb
+Casks/clipshield.rb
 ```
 
 Update:
@@ -29,18 +29,18 @@ Update:
 2. Add your cask at:
 
 ```
-Casks/mactools.rb
+Casks/clipshield.rb
 ```
 
 3. Install:
 
 ```bash
 brew tap yourname/tap
-brew install --cask mactools
+brew install --cask clipshield
 ```
 
 ## 4) Submit to Homebrew/homebrew-cask (Optional)
 
 1. Fork `Homebrew/homebrew-cask`
-2. Add `Casks/mactools.rb`
+2. Add `Casks/clipshield.rb`
 3. Open a PR

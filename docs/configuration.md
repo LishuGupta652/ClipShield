@@ -1,106 +1,39 @@
 # Configuration
 
-MacTools is config-first. The menu is generated from JSON.
-
-Config file location:
+ClipShield is config-driven. The config file lives at:
 
 ```
-~/Library/Application Support/MacTools/config.json
+~/Library/Application Support/ClipShield/config.json
 ```
 
-Default template:
+Reload the config from the menu bar after edits.
 
-```
-Sources/MacTools/Resources/DefaultConfig.json
-```
+## Core Settings
 
-## Top-Level Keys
+- `monitoring.enabled`: enable/disable background monitoring
+- `monitoring.pollIntervalSeconds`: how often to scan the clipboard
+- `monitoring.safePaste.enabled`: auto-redact when PII is detected
+- `detection.builtins`: toggle PAN/IBAN/SSN/email/phone detection
+- `detection.customRules`: add regex-based rules
+- `redaction.perType`: per-type redaction strategy
+- `logging.enabled`: local logging (off by default)
 
-- `version` (int)
-- `appTitle` (string)
-- `menuBarIcon` (object)
-- `statusSection` (object)
-- `sections` (array)
-- `footer` (object)
-- `debug` (object)
-
-## Example
+## Custom Rule Example
 
 ```json
 {
-  "version": 1,
-  "appTitle": "MacTools",
-  "menuBarIcon": {
-    "symbolName": "hammer.circle.fill",
-    "accessibilityLabel": "MacTools"
-  },
-  "statusSection": {
-    "title": "Status",
-    "showTime": true,
-    "showBattery": true,
-    "showWiFi": true,
-    "showClipboard": true,
-    "timeFormat": "EEE, MMM d h:mm a"
-  },
-  "sections": [
-    {
-      "title": "Quick Actions",
-      "items": [
-        { "type": "openSettings", "title": "Wi-Fi Settings...", "paneID": "com.apple.preference.network" },
-        { "type": "openURL", "title": "Open Docs", "url": "https://example.com" },
-        { "type": "shell", "title": "Say Hi", "command": "/usr/bin/say", "arguments": ["Hi"] }
-      ]
-    }
-  ],
-  "footer": {
-    "showReloadConfig": true,
-    "showOpenConfig": true,
-    "showRevealConfig": true,
-    "showRelaunch": true,
-    "showQuit": true
-  },
-  "debug": {
-    "showWindow": false
-  }
+  "id": "slack_token",
+  "label": "Slack Token",
+  "pattern": "\\bxox[baprs]-[0-9a-zA-Z-]{10,48}\\b",
+  "enabled": true,
+  "strategy": "tokenize"
 }
 ```
 
-## Menu Bar Icon
+## Tokenization
 
-You can use either:
+Tokenization replaces matched values with deterministic tokens that never leave your machine. Configure:
 
-- `symbolName` for SF Symbols
-- `iconPath` for a custom icon file (relative to the config directory)
-
-Example:
-
-```json
-"menuBarIcon": {
-  "iconPath": "MenuBarIcon.png",
-  "accessibilityLabel": "My Tools"
-}
-```
-
-## Time Format
-
-`statusSection.timeFormat` uses standard `DateFormatter` patterns.
-
-Example:
-
-```json
-"timeFormat": "HH:mm"
-```
-
-## Debug Window
-
-To show a debug window on launch:
-
-```json
-"debug": { "showWindow": true }
-```
-
-You can also force it on via environment variable:
-
-```bash
-MACTOOLS_DEBUG=1 swift run
-```
+- `redaction.tokenization.prefix`
+- `redaction.tokenization.hashLength`
+- `redaction.tokenization.salt`

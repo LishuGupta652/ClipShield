@@ -1,22 +1,16 @@
 # Troubleshooting
 
-## Menu bar icon is missing
+## ClipShield icon not visible
 
-- Run `swift run` from Terminal and check for errors
-- Relaunch MacTools from the menu or quit and reopen
+- Make sure the menu bar has space (disable auto-hide temporarily)
+- Quit and relaunch the app
 
-## Spotlight trigger fails
+## No detections
 
-- Grant Accessibility permission to MacTools
-- System Settings -> Privacy & Security -> Accessibility
+- Confirm monitoring is enabled in the menu
+- Ensure the built-in rules are enabled in `config.json`
 
-## System Settings link not opening
+## Safe Paste not working
 
-- Pane IDs can change across macOS versions
-- Update pane IDs in `Sources/MacTools/Resources/DefaultConfig.json`
-
-## Icons disappeared in Finder
-
-```bash
-killall Finder
-```
+- Enable `monitoring.safePaste.enabled`
+- Try copying fresh text to trigger a new scan

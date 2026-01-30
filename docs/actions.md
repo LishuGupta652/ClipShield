@@ -1,45 +1,21 @@
-# Actions
+# Redaction & Rules
 
-Each menu item uses a `type` and optional fields.
+ClipShield ships with strong default rules:
 
-| Type | Required fields | Description |
-| --- | --- | --- |
-| `openSettings` | `paneID` | Open a System Settings pane |
-| `openApp` | `path` | Open an app bundle path |
-| `openURL` | `url` | Open a URL in the default browser |
-| `shell` | `command` | Run a command (optional `arguments`) |
-| `appleScript` | `script` | Run AppleScript via `osascript` |
-| `clipboardCopy` | `text` | Copy text to clipboard |
-| `clipboardClear` | - | Clear clipboard |
-| `reloadConfig` | - | Reload config.json |
-| `openConfig` | - | Open config.json in the default editor |
-| `revealConfig` | - | Reveal config.json in Finder |
-| `relaunch` | - | Relaunch MacTools |
-| `quit` | - | Quit MacTools |
-| `separator` | - | Insert a menu separator |
+- **PAN (payment cards)**: 13–19 digits + Luhn validation
+- **IBAN**: country code + checksum validation (mod 97)
+- **SSN**: excludes invalid ranges (000/666/9xx)
+- **Email**: RFC-style pattern
+- **Phone**: 10–15 digits with separators
 
-## Examples
+## Redaction Strategies
 
-### Open System Settings
+- `mask`: hides sensitive characters, preserves last digits
+- `tokenize`: replaces with a stable token (hash-based)
+- `remove`: replaces with `[REDACTED:TYPE]`
 
-```json
-{ "type": "openSettings", "title": "Wi-Fi Settings...", "paneID": "com.apple.preference.network" }
-```
+You can set the default strategy in `redaction.defaultStrategy` and override per type in `redaction.perType`.
 
-### Run a Command
+## Safe Paste Mode
 
-```json
-{ "type": "shell", "title": "Restart Finder", "command": "/usr/bin/killall", "arguments": ["Finder"] }
-```
-
-### Run AppleScript
-
-```json
-{ "type": "appleScript", "title": "Trigger Spotlight", "script": "tell application \"System Events\" to keystroke space using command down" }
-```
-
-### Clipboard Shortcuts
-
-```json
-{ "type": "clipboardCopy", "title": "Copy Email", "text": "you@example.com" }
-```
+When Safe Paste is enabled, any detected PII is automatically redacted (or tokenized) before you paste. This makes pasting into chat or ticketing tools safer by default.
