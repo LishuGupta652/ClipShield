@@ -2,20 +2,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "MacTools",
+    name: "ClipShield",
     platforms: [.macOS(.v13)],
     products: [
-        .executable(name: "MacTools", targets: ["MacTools"])
+        .executable(name: "ClipShield", targets: ["ClipShieldApp"]),
+        .executable(name: "clipshield", targets: ["ClipShieldCLI"])
     ],
     targets: [
+        .target(
+            name: "ClipShieldCore",
+            path: "Sources/ClipShieldCore",
+            resources: [.process("Resources")]
+        ),
         .executableTarget(
-            name: "MacTools",
-            path: "Sources/MacTools",
-            resources: [.process("Resources")],
-            linkerSettings: [
-                .linkedFramework("CoreWLAN"),
-                .linkedFramework("IOKit")
-            ]
+            name: "ClipShieldApp",
+            dependencies: ["ClipShieldCore"],
+            path: "Sources/ClipShieldApp"
+        ),
+        .executableTarget(
+            name: "ClipShieldCLI",
+            dependencies: ["ClipShieldCore"],
+            path: "Sources/ClipShieldCLI"
         )
     ]
 )

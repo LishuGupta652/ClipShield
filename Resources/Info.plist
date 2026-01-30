@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleDisplayName</key>
-    <string>MacTools</string>
+    <string>ClipShield</string>
     <key>CFBundleExecutable</key>
-    <string>MacTools</string>
+    <string>ClipShield</string>
     <key>CFBundleIdentifier</key>
-    <string>com.yourname.mactools</string>
+    <string>com.yourname.clipshield</string>
     <key>CFBundleName</key>
-    <string>MacTools</string>
+    <string>ClipShield</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -18,8 +18,6 @@
     <string>1.0.0</string>
     <key>LSUIElement</key>
     <true/>
-    <key>NSAppleEventsUsageDescription</key>
-    <string>MacTools uses AppleScript for shortcuts like Spotlight.</string>
     <key>NSHighResolutionCapable</key>
     <true/>
 </dict>
